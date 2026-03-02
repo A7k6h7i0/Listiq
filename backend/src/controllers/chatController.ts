@@ -43,10 +43,10 @@ export const getConversations = async (req: AuthRequest, res: Response): Promise
     });
 
     const unreadMap = new Map(
-      unreadByConversation.map((item) => [item.conversationId, item._count._all])
+      unreadByConversation.map((item: any) => [item.conversationId, item._count._all])
     );
 
-    const conversationsWithUnread = conversations.map((conversation) => ({
+    const conversationsWithUnread = conversations.map((conversation: any) => ({
       ...conversation,
       unreadCount: unreadMap.get(conversation.id) || 0,
     }));

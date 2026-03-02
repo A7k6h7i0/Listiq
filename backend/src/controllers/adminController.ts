@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { Prisma, Role, ListingStatus, ReportStatus } from '@prisma/client';
 import prisma from '../config/prisma';
 import { AuthRequest } from '../types/express';
 
@@ -50,9 +49,9 @@ export const getAllUsers = async (req: AuthRequest, res: Response): Promise<void
   try {
     const { page = 1, limit = 20, role, search } = req.query;
 
-    const where: Prisma.UserWhereInput = {};
+    const where: any = {};
     if (role && typeof role === 'string' && ['USER', 'ADMIN', 'MODERATOR'].includes(role)) {
-      where.role = role as Role;
+      where.role = role;
     }
     if (search) {
       where.OR = [
@@ -132,13 +131,13 @@ export const getAllListings = async (req: AuthRequest, res: Response): Promise<v
   try {
     const { page = 1, limit = 20, status, search } = req.query;
 
-    const where: Prisma.ListingWhereInput = {};
+    const where: any = {};
     if (
       status &&
       typeof status === 'string' &&
       ['PENDING', 'APPROVED', 'REJECTED', 'SOLD', 'EXPIRED'].includes(status)
     ) {
-      where.status = status as ListingStatus;
+      where.status = status;
     }
     if (search) {
       where.OR = [
@@ -204,13 +203,13 @@ export const getAllReports = async (req: AuthRequest, res: Response): Promise<vo
   try {
     const { page = 1, limit = 20, status } = req.query;
 
-    const where: Prisma.ReportWhereInput = {};
+    const where: any = {};
     if (
       status &&
       typeof status === 'string' &&
       ['PENDING', 'REVIEWED', 'RESOLVED', 'DISMISSED'].includes(status)
     ) {
-      where.status = status as ReportStatus;
+      where.status = status;
     }
 
     const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
@@ -279,10 +278,10 @@ export const getRevenueStats = async (req: AuthRequest, res: Response): Promise<
       orderBy: { createdAt: 'asc' },
     });
 
-    const totalRevenue = payments.reduce((sum, p) => sum + p.amount, 0);
+    const totalRevenue = payments.reduce((sum: number, p: { amount: number }) => sum + p.amount, 0);
     
     const dailyRevenue: Record<string, number> = {};
-    payments.forEach(p => {
+    payments.forEach((p: { createdAt: Date; amount: number }) => {
       const date = p.createdAt.toISOString().split('T')[0];
       dailyRevenue[date] = (dailyRevenue[date] || 0) + p.amount;
     });

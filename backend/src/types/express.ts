@@ -1,4 +1,3 @@
-import { Role } from '@prisma/client';
 import { Request } from 'express';
 
 declare global {
@@ -7,7 +6,7 @@ declare global {
       user?: {
         id: string;
         email: string;
-        role: Role;
+        role: string;
       };
     }
   }
@@ -20,7 +19,7 @@ export interface AuthRequest extends Request {
 export interface TokenPayload {
   id: string;
   email: string;
-  role: Role;
+  role: string;
 }
 
 export interface RefreshTokenPayload {

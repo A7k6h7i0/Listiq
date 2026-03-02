@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { Prisma } from '@prisma/client';
 import prisma from '../config/prisma';
 
 const router = Router();
@@ -7,7 +6,7 @@ const router = Router();
 router.get('/', async (req, res) => {
   try {
     const { search } = req.query;
-    const where: Prisma.LocationWhereInput = typeof search === 'string' && search.trim().length > 0
+    const where: any = typeof search === 'string' && search.trim().length > 0
       ? {
           country: 'India',
           OR: [
