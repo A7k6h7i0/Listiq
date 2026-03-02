@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: listiq-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    autoDeploy: true
+

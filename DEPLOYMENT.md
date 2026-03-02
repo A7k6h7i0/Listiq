@@ -96,9 +96,13 @@ npx prisma db push
 
 #### Option A: Render.com
 1. Connect GitHub repository
-2. Set build command: `npm run build`
-3. Set start command: `npm start`
-4. Add environment variables
+2. Set `Root Directory` to `backend` (required for monorepo)
+3. Set build command: `npm ci && npm run build`
+4. Set start command: `npm start`
+5. Add environment variables
+
+If you do not set `Root Directory=backend`, Render runs commands at repo root, where no
+`package-lock.json` exists, and `npm ci` fails with `EUSAGE`.
 
 #### Option B: AWS EC2
 1. Launch EC2 instance
