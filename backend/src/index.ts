@@ -22,6 +22,9 @@ const httpServer = createServer(app);
 
 initSocket(httpServer);
 
+// Render sits behind a reverse proxy. Required for correct client IP/rate limiting behavior.
+app.set('trust proxy', 1);
+
 app.use(helmet());
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',

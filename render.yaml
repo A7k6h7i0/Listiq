@@ -3,6 +3,6 @@ services:
     name: listiq-backend
     env: node
     rootDir: backend
-    buildCommand: npm ci --include=dev && npm run build
+    buildCommand: npm ci --include=dev && npm run build && npm run db:push && npm run db:seed
     startCommand: npm start
     autoDeploy: true
