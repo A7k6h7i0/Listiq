@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { categoriesApi } from '@/lib/api';
+import { categoriesApi, listingsApi } from '@/lib/api';
 import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/lib/store';
 import {
   Search,
   ShieldCheck,
@@ -61,9 +62,11 @@ const categoryVisuals: Record<string, { icon: LucideIcon; bg: string }> = {
 };
 
 export default function HomePage() {
+  const { isAuthenticated, user } = useAuthStore();
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [hasPostedListing, setHasPostedListing] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +82,24 @@ export default function HomePage() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchMyListings = async () => {
+      if (!isAuthenticated || !user?.id) {
+        setHasPostedListing(false);
+        return;
+      }
+
+      try {
+        const { data } = await listingsApi.getMyListings({ page: 1, limit: 1 });
+        setHasPostedListing((data?.listings || []).length > 0);
+      } catch {
+        setHasPostedListing(false);
+      }
+    };
+
+    fetchMyListings();
+  }, [isAuthenticated, user?.id]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -190,7 +211,7 @@ export default function HomePage() {
           </p>
           <Link href="/listings/create">
             <Button size="lg" variant="secondary">
-              Post Your First Ad
+              {hasPostedListing ? 'Post Your Next Ad' : 'Post Your First Ad'}
             </Button>
           </Link>
         </div>
@@ -198,4 +219,3 @@ export default function HomePage() {
     </div>
   );
 }
-

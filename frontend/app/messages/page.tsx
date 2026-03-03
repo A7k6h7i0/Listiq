@@ -12,8 +12,8 @@ type Conversation = {
   updatedAt: string;
   unreadCount?: number;
   listing: { id: string; title: string; images?: { url: string }[] };
-  buyer: { id: string; name: string; phone?: string };
-  seller: { id: string; name: string; phone?: string };
+  buyer: { id: string; name: string };
+  seller: { id: string; name: string };
   messages: { id: string; senderId: string; content: string; createdAt: string }[];
 };
 
@@ -146,9 +146,7 @@ export default function MessagesPage() {
               <>
                 <div className="border-b pb-3 mb-3">
                   <p className="font-semibold">{selectedConversation.listing.title}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Chat with {otherParty?.name} | Phone: {otherParty?.phone || 'Not shared'}
-                  </p>
+                  <p className="text-sm text-muted-foreground">Chat with {otherParty?.name}</p>
                 </div>
 
                 <div className="flex-1 overflow-auto space-y-3 pr-1">

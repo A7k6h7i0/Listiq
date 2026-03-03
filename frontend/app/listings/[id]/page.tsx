@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { authApi, chatApi, favoritesApi, listingsApi } from '@/lib/api';
+import { chatApi, favoritesApi, listingsApi } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/lib/store';
 import { useToast } from '@/components/ui/use-toast';
@@ -15,7 +15,7 @@ type Listing = {
   currency: string;
   images: { url: string }[];
   location: { city: string; state: string };
-  user: { id: string; name: string; phone?: string };
+  user: { id: string; name: string };
 };
 
 export default function ListingDetailsPage() {
@@ -28,12 +28,10 @@ export default function ListingDetailsPage() {
   const [listing, setListing] = useState<Listing | null>(null);
   const [showComposer, setShowComposer] = useState(false);
   const [sending, setSending] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [message, setMessage] = useState('');
 
-  const buildDefaultMessage = (number: string) => {
-    const contactNumber = number || '[your phone number]';
-    return `Hello ${listing?.user?.name || 'Seller'}, I am interested in your listing "${listing?.title || ''}". Please let me know if it is still available. You can contact me at ${contactNumber}. Thank you.`;
+  const buildDefaultMessage = () => {
+    return `Hello ${listing?.user?.name || 'Seller'}, I am interested in your listing "${listing?.title || ''}". Please let me know if it is still available. Thank you.`;
   };
 
   useEffect(() => {
@@ -84,17 +82,8 @@ export default function ListingDetailsPage() {
       return;
     }
 
-    try {
-      const { data } = await authApi.getProfile();
-      const userPhone = data.phone || '';
-      setPhoneNumber(userPhone);
-      setMessage(buildDefaultMessage(userPhone));
-      setShowComposer(true);
-    } catch {
-      setPhoneNumber('');
-      setMessage(buildDefaultMessage(''));
-      setShowComposer(true);
-    }
+    setMessage(buildDefaultMessage());
+    setShowComposer(true);
   };
 
   const onSendMessage = async () => {
@@ -164,20 +153,10 @@ export default function ListingDetailsPage() {
             <Button variant="outline" onClick={onOpenChat}>Chat with Seller</Button>
           </div>
           <p className="text-sm text-muted-foreground mt-4">Seller: {listing.user?.name}</p>
-          <p className="text-sm text-muted-foreground">Seller phone: {listing.user?.phone || 'Not shared'}</p>
 
           {showComposer && (
             <div className="mt-6 border rounded-lg p-4 space-y-3">
               <h2 className="font-semibold">Contact Seller</h2>
-              <div>
-                <label className="block text-sm mb-1">Your phone number</label>
-                <input
-                  className="w-full border rounded-md p-2"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="+91XXXXXXXXXX"
-                />
-              </div>
               <div>
                 <label className="block text-sm mb-1">Message</label>
                 <textarea
@@ -190,7 +169,7 @@ export default function ListingDetailsPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setMessage(buildDefaultMessage(phoneNumber))}
+                  onClick={() => setMessage(buildDefaultMessage())}
                 >
                   Use Default Message
                 </Button>

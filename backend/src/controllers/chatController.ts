@@ -22,8 +22,8 @@ export const getConversations = async (req: AuthRequest, res: Response): Promise
             images: { take: 1 },
           },
         },
-        buyer: { select: { id: true, name: true, avatar: true, phone: true } },
-        seller: { select: { id: true, name: true, avatar: true, phone: true } },
+        buyer: { select: { id: true, name: true, avatar: true } },
+        seller: { select: { id: true, name: true, avatar: true } },
         messages: {
           orderBy: { createdAt: 'desc' },
           take: 1,
@@ -78,8 +78,8 @@ export const getConversation = async (req: AuthRequest, res: Response): Promise<
             images: true,
           },
         },
-        buyer: { select: { id: true, name: true, avatar: true, email: true, phone: true } },
-        seller: { select: { id: true, name: true, avatar: true, email: true, phone: true } },
+        buyer: { select: { id: true, name: true, avatar: true } },
+        seller: { select: { id: true, name: true, avatar: true } },
         messages: {
           orderBy: { createdAt: 'asc' },
         },
@@ -150,8 +150,8 @@ export const createConversation = async (req: AuthRequest, res: Response): Promi
       where: { id: conversation.id },
       include: {
         listing: { include: { images: true } },
-        buyer: { select: { id: true, name: true, avatar: true, phone: true } },
-        seller: { select: { id: true, name: true, avatar: true, phone: true } },
+        buyer: { select: { id: true, name: true, avatar: true } },
+        seller: { select: { id: true, name: true, avatar: true } },
       },
     });
 

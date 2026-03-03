@@ -28,7 +28,7 @@ export const createListing = async (req: AuthRequest, res: Response): Promise<vo
         subcategory: true,
         location: true,
         user: {
-          select: { id: true, name: true, email: true, phone: true, avatar: true },
+          select: { id: true, name: true, avatar: true },
         },
       },
     });
@@ -52,7 +52,7 @@ export const getListing = async (req: AuthRequest, res: Response): Promise<void>
         subcategory: true,
         location: true,
         user: {
-          select: { id: true, name: true, email: true, phone: true, avatar: true, createdAt: true },
+          select: { id: true, name: true, avatar: true, createdAt: true },
         },
       },
     });
