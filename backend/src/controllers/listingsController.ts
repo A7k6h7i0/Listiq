@@ -86,6 +86,8 @@ export const searchListings = async (req: AuthRequest, res: Response): Promise<v
       where.OR = [
         { title: { contains: q as string, mode: 'insensitive' } },
         { description: { contains: q as string, mode: 'insensitive' } },
+        { category: { name: { contains: q as string, mode: 'insensitive' } } },
+        { subcategory: { name: { contains: q as string, mode: 'insensitive' } } },
       ];
     }
 
